@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionnaire Interactif</title>
+    <style>
+        /* Le style visuel de la page */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+            overflow: hidden; /* Empêche l'écran de scroller quand le bouton bouge */
+        }
+        .page {
+            display: none;
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 300px;
+        }
+        .page.active {
+            display: block; /* Affiche uniquement la page active */
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #btn-non {
+            background-color: #dc3545;
+            transition: left 0.1s, top 0.1s; /* Rend le mouvement un peu plus fluide */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Page 1 -->
+    <div id="page1" class="page active">
+        <h2>Question 1 : Es-tu d'accord avec cette proposition ?</h2>
+        <button onclick="changerPage(2)">Oui</button>
+        <button id="btn-non">Non</button>
+    </div>
+
+    <!-- Page 2 -->
+    <div id="page2" class="page">
+        <h2>Question 2 : Quelle est ta couleur préférée ?</h2>
+        <input type="text" id="reponse2" placeholder="Ta réponse..." style="padding: 10px; width: 80%;">
+        <br><br>
+        <button onclick="changerPage(3)">Suivant</button>
+    </div>
+
+    <!-- Page 3 -->
+    <div id="page3" class="page">
+        <h2>Question 3 : As-tu un commentaire ?</h2>
+        <textarea id="reponse3" rows="4" placeholder="Ton avis..." style="padding: 10px; width: 80%;"></textarea>
+        <br><br>
+        <button onclick="terminer()">Terminer</button>
+    </div>
+
+    <script>
+        // --- 1. Logique pour faire fuir le bouton "Non" ---
+        const btnNon = document.getElementById('btn-non');
+
+        btnNon.addEventListener('mouseover', function() {
+            // Calcule une position aléatoire en gardant le bouton dans la fenêtre
+            const xMax = window.innerWidth - btnNon.offsetWidth - 20;
+            const yMax = window.innerHeight - btnNon.offsetHeight - 20;
+            
+            const randomX = Math.floor(Math.random() * xMax);
+            const randomY = Math.floor(Math.random() * yMax);
+
+            btnNon.style.position = 'absolute';
+            btnNon.style.left = randomX + 'px';
+            btnNon.style.top = randomY + 'px';
+        });
+
+        // --- 2. Logique pour changer de page ---
+        function changerPage(numeroPage) {
+            // Cache toutes les pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+
+            // Affiche la page demandée
+            document.getElementById('page' + numeroPage).classList.add('active');
+        }
+
+        // --- 3. Logique de fin ---
+        function terminer() {
+            alert("Merci d'avoir répondu au questionnaire !");
+        }
+    </script>
+</body>
+</html>
