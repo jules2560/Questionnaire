@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Questionnaire Interactif</title>
+    <title>Surprise !</title>
     <style>
-        /* Le style visuel de la page */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -14,7 +13,7 @@
             height: 100vh;
             margin: 0;
             background-color: #f4f4f9;
-            overflow: hidden; /* Empêche l'écran de scroller quand le bouton bouge */
+            overflow: hidden;
         }
         .page {
             display: none;
@@ -23,13 +22,13 @@
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 300px;
+            width: 350px;
         }
         .page.active {
-            display: block; /* Affiche uniquement la page active */
+            display: block;
         }
         button {
-            padding: 10px 20px;
+            padding: 12px 24px;
             font-size: 16px;
             margin: 10px;
             cursor: pointer;
@@ -42,9 +41,19 @@
         button:hover {
             background-color: #0056b3;
         }
+        .btn-destination {
+            background-color: #28a745;
+            display: block;
+            width: 80%;
+            margin: 10px auto;
+        }
+        .btn-destination:hover {
+            background-color: #218838;
+        }
         #btn-non {
             background-color: #dc3545;
-            transition: left 0.1s, top 0.1s; /* Rend le mouvement un peu plus fluide */
+            /* La transition rend la fuite du bouton plus fluide */
+            transition: left 0.15s ease-out, top 0.15s ease-out; 
         }
     </style>
 </head>
@@ -52,57 +61,80 @@
 
     <!-- Page 1 -->
     <div id="page1" class="page active">
-        <h2>Question 1 : Es-tu d'accord avec cette proposition ?</h2>
+        <h2>Dès que tu rentres, on part en weekend ?</h2>
+        <br>
         <button onclick="changerPage(2)">Oui</button>
         <button id="btn-non">Non</button>
     </div>
 
     <!-- Page 2 -->
     <div id="page2" class="page">
-        <h2>Question 2 : Quelle est ta couleur préférée ?</h2>
-        <input type="text" id="reponse2" placeholder="Ta réponse..." style="padding: 10px; width: 80%;">
-        <br><br>
-        <button onclick="changerPage(3)">Suivant</button>
+        <h2>Super ! Tu as cliqué sur Oui, maintenant il faut choisir la destination ;)</h2>
+        <br>
+        <button class="btn-destination" onclick="choisirDestination('Budapest')">Budapest</button>
+        <button class="btn-destination" onclick="choisirDestination('Stockholm')">Stockholm</button>
+        <button class="btn-destination" onclick="choisirDestination('Madrid')">Madrid</button>
     </div>
 
     <!-- Page 3 -->
     <div id="page3" class="page">
-        <h2>Question 3 : As-tu un commentaire ?</h2>
-        <textarea id="reponse3" rows="4" placeholder="Ton avis..." style="padding: 10px; width: 80%;"></textarea>
+        <h2>Toute idée est bonne à prendre, n'hésite pas à me dire ;)</h2>
+        <br>
+        <textarea id="reponse3" rows="5" placeholder="Ton avis, tes envies..." style="padding: 10px; width: 90%; border-radius: 5px; border: 1px solid #ccc;"></textarea>
         <br><br>
         <button onclick="terminer()">Terminer</button>
     </div>
 
     <script>
-        // --- 1. Logique pour faire fuir le bouton "Non" ---
-        const btnNon = document.getElementById('btn-non');
+        // --- 1. Le "radar" pour le bouton Non ---
+        document.addEventListener('mousemove', function(e) {
+            const page1 = document.getElementById('page1');
+            // On ne fait bouger le bouton que si on est sur la première page
+            if (!page1.classList.contains('active')) return;
 
-        btnNon.addEventListener('mouseover', function() {
-            // Calcule une position aléatoire en gardant le bouton dans la fenêtre
-            const xMax = window.innerWidth - btnNon.offsetWidth - 20;
-            const yMax = window.innerHeight - btnNon.offsetHeight - 20;
+            const btnNon = document.getElementById('btn-non');
+            const rect = btnNon.getBoundingClientRect();
             
-            const randomX = Math.floor(Math.random() * xMax);
-            const randomY = Math.floor(Math.random() * yMax);
+            // Calcul du centre du bouton "Non"
+            const btnCenterX = rect.left + rect.width / 2;
+            const btnCenterY = rect.top + rect.height / 2;
+            
+            // Calcul de la distance entre la souris et le centre du bouton
+            const distance = Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY);
+            
+            // Si le curseur s'approche à moins de 90 pixels, le bouton fuit
+            if (distance < 90) {
+                const xMax = window.innerWidth - btnNon.offsetWidth - 20;
+                const yMax = window.innerHeight - btnNon.offsetHeight - 20;
+                
+                // Nouvelles coordonnées aléatoires
+                const randomX = Math.floor(Math.random() * xMax);
+                const randomY = Math.floor(Math.random() * yMax);
 
-            btnNon.style.position = 'absolute';
-            btnNon.style.left = randomX + 'px';
-            btnNon.style.top = randomY + 'px';
+                btnNon.style.position = 'absolute';
+                btnNon.style.left = randomX + 'px';
+                btnNon.style.top = randomY + 'px';
+            }
         });
 
         // --- 2. Logique pour changer de page ---
         function changerPage(numeroPage) {
-            // Cache toutes les pages
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => page.classList.remove('active'));
-
-            // Affiche la page demandée
             document.getElementById('page' + numeroPage).classList.add('active');
         }
 
-        // --- 3. Logique de fin ---
+        // --- 3. Logique pour stocker la destination ---
+        let destinationChoisie = "";
+        function choisirDestination(ville) {
+            destinationChoisie = ville;
+            changerPage(3);
+        }
+
+        // --- 4. Logique de fin ---
         function terminer() {
-            alert("Merci d'avoir répondu au questionnaire !");
+            const commentaire = document.getElementById('reponse3').value;
+            alert("C'est noté pour " + destinationChoisie + " ! \nCommentaire : " + (commentaire ? commentaire : "Aucun"));
         }
     </script>
 </body>
