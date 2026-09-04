@@ -3,30 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Date ? !</title>
+    <title>Surprise !</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
             background-color: #f4f4f9;
-            overflow: hidden;
+            overflow-x: hidden;
         }
         .page {
             display: none;
             text-align: center;
-            background: white;
+            /* La couleur de l'encadré passe en rose pâle */
+            background: #ffd1dc; 
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             width: 350px;
+            position: relative;
         }
         .page.active {
             display: block;
         }
+        h2 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        p {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+        .page img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .image-destination {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        
+        /* --- NOUVELLES COULEURS DES BOUTONS --- */
         button {
             padding: 12px 24px;
             font-size: 16px;
@@ -34,26 +64,62 @@
             cursor: pointer;
             border: none;
             border-radius: 5px;
-            background-color: #007bff;
-            color: white;
             transition: background-color 0.3s;
+            /* Vert clair pour tous les boutons par défaut */
+            background-color: #90ee90; 
+            color: #333; /* Texte foncé pour bien lire sur le vert clair */
         }
         button:hover {
-            background-color: #0056b3;
+            opacity: 0.8;
         }
-        .btn-destination {
-            background-color: #28a745;
-            display: block;
-            width: 80%;
-            margin: 10px auto;
-        }
-        .btn-destination:hover {
-            background-color: #218838;
+        #btn-oui {
+            /* Force le vert clair spécifiquement pour le bouton Oui */
+            background-color: #90ee90;
         }
         #btn-non {
-            background-color: #dc3545;
-            /* La transition rend la fuite du bouton plus fluide */
+            /* Rouge pour le bouton Non */
+            background-color: #ff4d4d;
+            color: white;
             transition: left 0.15s ease-out, top 0.15s ease-out; 
+        }
+        .btn-destination {
+            /* Vert clair pour les destinations */
+            background-color: #90ee90; 
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            margin: 0;
+            gap: 10px;
+            text-align: left;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .btn-destination span {
+            flex-grow: 1;
+        }
+        #btn-terminer {
+            /* Vert clair pour le bouton Terminer */
+            background-color: #90ee90; 
+            color: #333;
+        }
+        /* -------------------------------------- */
+
+        .container-destinations {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        textarea {
+            padding: 10px;
+            width: calc(100% - 22px);
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -61,53 +127,62 @@
 
     <!-- Page 1 -->
     <div id="page1" class="page active">
+        <img src="https://via.placeholder.com/350x200?text=Une+photo+d'ambiance" alt="Weekend !">
         <h2>Dès que tu rentres, on part en weekend ?</h2>
-        <br>
-        <button onclick="changerPage(2)">Oui</button>
+        <p>Dis oui ! C'est le moment de se faire plaisir.</p>
+        <button id="btn-oui" onclick="changerPage(2)">Oui</button>
         <button id="btn-non">Non</button>
     </div>
 
     <!-- Page 2 -->
     <div id="page2" class="page">
-        <h2>Super ! Tu as cliqué sur Oui, maintenant il faut choisir la destination ;)</h2>
-        <br>
-        <button class="btn-destination" onclick="choisirDestination('Budapest')">Budapest</button>
-        <button class="btn-destination" onclick="choisirDestination('Stockholm')">Stockholm</button>
-        <button class="btn-destination" onclick="choisirDestination('Madrid')">Madrid</button>
+        <h2>Super ! Tu as cliqué sur Oui...</h2>
+        <p>Maintenant il faut choisir la destination ;)</p>
+        
+        <div class="container-destinations">
+            <button class="btn-destination" onclick="choisirDestination('Budapest')">
+                <img src="https://via.placeholder.com/100x100?text=BUDAPEST" alt="Budapest" class="image-destination">
+                <span>Budapest</span>
+            </button>
+            
+            <button class="btn-destination" onclick="choisirDestination('Stockholm')">
+                <img src="https://via.placeholder.com/100x100?text=STOCKHOLM" alt="Stockholm" class="image-destination">
+                <span>Stockholm</span>
+            </button>
+            
+            <button class="btn-destination" onclick="choisirDestination('Madrid')">
+                <img src="https://via.placeholder.com/100x100?text=MADRID" alt="Madrid" class="image-destination">
+                <span>Madrid</span>
+            </button>
+        </div>
     </div>
 
     <!-- Page 3 -->
     <div id="page3" class="page">
+        <img src="https://via.placeholder.com/350x200?text=Une+photo+de+fin" alt="Merci !">
         <h2>Toute idée est bonne à prendre, n'hésite pas à me dire ;)</h2>
-        <br>
-        <textarea id="reponse3" rows="5" placeholder="Ton avis, tes envies..." style="padding: 10px; width: 90%; border-radius: 5px; border: 1px solid #ccc;"></textarea>
-        <br><br>
-        <button onclick="terminer()">Terminer</button>
+        <textarea id="reponse3" rows="5" placeholder="Ton avis, tes envies..."></textarea>
+        <button id="btn-terminer" onclick="terminer()">Terminer</button>
     </div>
 
     <script>
         // --- 1. Le "radar" pour le bouton Non ---
         document.addEventListener('mousemove', function(e) {
             const page1 = document.getElementById('page1');
-            // On ne fait bouger le bouton que si on est sur la première page
             if (!page1.classList.contains('active')) return;
 
             const btnNon = document.getElementById('btn-non');
             const rect = btnNon.getBoundingClientRect();
             
-            // Calcul du centre du bouton "Non"
             const btnCenterX = rect.left + rect.width / 2;
             const btnCenterY = rect.top + rect.height / 2;
             
-            // Calcul de la distance entre la souris et le centre du bouton
             const distance = Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY);
             
-            // Si le curseur s'approche à moins de 90 pixels, le bouton fuit
             if (distance < 90) {
                 const xMax = window.innerWidth - btnNon.offsetWidth - 20;
                 const yMax = window.innerHeight - btnNon.offsetHeight - 20;
                 
-                // Nouvelles coordonnées aléatoires
                 const randomX = Math.floor(Math.random() * xMax);
                 const randomY = Math.floor(Math.random() * yMax);
 
