@@ -3,60 +3,62 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Surprise !</title>
+    <title>Questionnaire Interactif</title>
     <style>
+        /* Base page and collage background */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
+            height: 100vh;
             margin: 0;
-            background-color: #f4f4f9;
-            overflow-x: hidden;
+            overflow: hidden; /* Prevent scrolling when collage is active or button moves */
+            position: relative;
         }
+
+        /* Photo collage pattern for background outside the card */
+        #photo-collage-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f0f0f0; /* Default background */
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            z-index: -1; /* Behind the card */
+            overflow: hidden;
+        }
+        #photo-collage-background img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.6; /* Slight transparency for collage effect */
+        }
+
+        /* Central Card and pages */
         .page {
             display: none;
             text-align: center;
-            /* La couleur de l'encadré passe en rose pâle */
-            background: #ffd1dc; 
+            /* Pale pink central card */
+            background: #fdf2f2;
             padding: 40px;
             border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            width: 350px;
-            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Deeper shadow */
+            width: 350px; /* Wider for more content and movement */
+            position: relative; /* Container for absolute button */
+            z-index: 1; /* On top of collage */
         }
         .page.active {
             display: block;
         }
         h2 {
-            font-size: 22px;
-            margin-bottom: 20px;
-            color: #333;
+            margin-bottom: 30px;
         }
-        p {
-            color: #555;
-            font-size: 15px;
-            margin-bottom: 25px;
-        }
-        .page img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .image-destination {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-bottom: 10px;
-        }
-        
-        /* --- NOUVELLES COULEURS DES BOUTONS --- */
+
+        /* Buttons and answers */
         button {
             padding: 12px 24px;
             font-size: 16px;
@@ -64,94 +66,128 @@
             cursor: pointer;
             border: none;
             border-radius: 5px;
-            transition: background-color 0.3s;
-            /* Vert clair pour tous les boutons par défaut */
-            background-color: #90ee90; 
-            color: #333; /* Texte foncé pour bien lire sur le vert clair */
+            transition: all 0.3s ease; /* Smooth hover effects */
+            display: block; /* Stack buttons by default */
+            margin-left: auto;
+            margin-right: auto;
+            width: 80%; /* Consistent width */
         }
         button:hover {
-            opacity: 0.8;
+            transform: translateY(-2px); /* Slight lift */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        #btn-oui {
-            /* Force le vert clair spécifiquement pour le bouton Oui */
-            background-color: #90ee90;
-        }
-        #btn-non {
-            /* Rouge pour le bouton Non */
-            background-color: #ff4d4d;
-            color: white;
-            transition: left 0.15s ease-out, top 0.15s ease-out; 
-        }
-        .btn-destination {
-            /* Vert clair pour les destinations */
-            background-color: #90ee90; 
-            color: #333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            margin: 0;
-            gap: 10px;
-            text-align: left;
-            border: none;
-            border-radius: 5px;
-            padding: 10px;
-            text-decoration: none;
-        }
-        .btn-destination span {
-            flex-grow: 1;
-        }
-        #btn-terminer {
-            /* Vert clair pour le bouton Terminer */
-            background-color: #90ee90; 
-            color: #333;
-        }
-        /* -------------------------------------- */
 
-        .container-destinations {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            margin-bottom: 25px;
+        /* Light green answers, dark text */
+        .page-button-light-green {
+            background-color: #bbfccb; /* Soft light green */
+            color: #333; /* Dark gray text */
         }
-        textarea {
-            padding: 10px;
-            width: calc(100% - 22px);
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            margin-bottom: 20px;
+        .page-button-light-green:hover {
+            background-color: #a8efb7; /* Slightly darker light green */
+        }
+
+        /* Budapest, Stockholm, Madrid photos in answers */
+        .destination-photo {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .destination-button-light-green {
+            background-color: #bbfccb;
+            color: #333;
+            padding: 0; /* Remove padding to contain photo */
+            display: block;
+            text-align: center;
+            overflow: hidden;
+            width: 80%;
+            height: auto;
+        }
+        .destination-button-light-green span {
+            display: block;
+            padding: 10px 0;
+        }
+        .destination-button-light-green:hover {
+            background-color: #a8efb7;
+        }
+
+        /* Fix button stack for specific pages */
+        #page1 button {
+            display: inline-block; /* Inline for 'Oui' and 'Non' */
+            width: auto;
+            min-width: 80px;
+        }
+        #page2 .destination-button-light-green,
+        #page3 .page-button-light-green {
+            display: block; /* Stack on other pages */
+            width: 80%;
+        }
+
+        /* No button special styling */
+        #btn-non {
+            background-color: #dc3545; /* Red as specified previously */
+            color: white;
+            /* Start positioned relative to page */
+            position: absolute;
+            /* Add smooth transitions for movement */
+            transition: left 0.15s ease-out, top 0.15s ease-out, opacity 0.3s ease; 
+            z-index: 2; /* On top of regular buttons */
         }
     </style>
 </head>
 <body>
 
+    <!-- Photo collage background outside the card -->
+    <div id="photo-collage-background">
+        <img src="https://via.placeholder.com/300x200?text=Paris" alt="Paris Collage">
+        <img src="https://via.placeholder.com/300x200?text=Budapest" alt="Budapest Collage">
+        <img src="https://via.placeholder.com/300x200?text=Rome" alt="Rome Collage">
+        <img src="https://via.placeholder.com/300x200?text=London" alt="London Collage">
+        <img src="https://via.placeholder.com/200x300?text=Athens" alt="Athens Collage">
+        <img src="https://via.placeholder.com/300x200?text=Berlin" alt="Berlin Collage">
+        <img src="https://via.placeholder.com/200x300?text=Madrid" alt="Madrid Collage">
+        <img src="https://via.placeholder.com/300x200?text=Stockholm" alt="Stockholm Collage">
+        <img src="https://via.placeholder.com/300x200?text=Paris" alt="Paris Collage">
+        <img src="https://via.placeholder.com/300x200?text=Budapest" alt="Budapest Collage">
+        <img src="https://via.placeholder.com/300x200?text=Rome" alt="Rome Collage">
+        <img src="https://via.placeholder.com/300x200?text=London" alt="London Collage">
+        <img src="https://via.placeholder.com/200x300?text=Athens" alt="Athens Collage">
+        <img src="https://via.placeholder.com/300x200?text=Berlin" alt="Berlin Collage">
+        <img src="https://via.placeholder.com/200x300?text=Madrid" alt="Madrid Collage">
+        <img src="https://via.placeholder.com/300x200?text=Stockholm" alt="Stockholm Collage">
+        <img src="https://via.placeholder.com/300x200?text=Paris" alt="Paris Collage">
+        <img src="https://via.placeholder.com/300x200?text=Budapest" alt="Budapest Collage">
+        <img src="https://via.placeholder.com/300x200?text=Rome" alt="Rome Collage">
+        <img src="https://via.placeholder.com/300x200?text=London" alt="London Collage">
+        <img src="https://via.placeholder.com/200x300?text=Athens" alt="Athens Collage">
+        <img src="https://via.placeholder.com/300x200?text=Berlin" alt="Berlin Collage">
+    </div>
+
     <!-- Page 1 -->
     <div id="page1" class="page active">
-        <img src="https://via.placeholder.com/350x200?text=Une+photo+d'ambiance" alt="Weekend !">
         <h2>Dès que tu rentres, on part en weekend ?</h2>
-        <p>Dis oui ! C'est le moment de se faire plaisir.</p>
-        <button id="btn-oui" onclick="changerPage(2)">Oui</button>
+        <button id="btn-oui" class="page-button-light-green" onclick="changerPage(2)">Oui</button>
+        <!-- The 'Non' button will be moved smoothly by JS on mouseover within the card -->
         <button id="btn-non">Non</button>
     </div>
 
     <!-- Page 2 -->
     <div id="page2" class="page">
-        <h2>Super ! Tu as cliqué sur Oui...</h2>
-        <p>Maintenant il faut choisir la destination ;)</p>
+        <h2>Super ! Tu as cliqué sur Oui, maintenant il faut choisir la destination ;)</h2>
         
-        <div class="container-destinations">
-            <button class="btn-destination" onclick="choisirDestination('Budapest')">
-                <img src="https://via.placeholder.com/100x100?text=BUDAPEST" alt="Budapest" class="image-destination">
+        <div style="margin-bottom: 20px;">
+            <button class="destination-button-light-green" onclick="choisirDestination('Budapest')">
+                <img src="https://via.placeholder.com/300x150?text=BUDAPEST" alt="Budapest" class="destination-photo">
                 <span>Budapest</span>
             </button>
-            
-            <button class="btn-destination" onclick="choisirDestination('Stockholm')">
-                <img src="https://via.placeholder.com/100x100?text=STOCKHOLM" alt="Stockholm" class="image-destination">
+            <button class="destination-button-light-green" onclick="choisirDestination('Stockholm')">
+                <img src="https://via.placeholder.com/300x150?text=STOCKHOLM" alt="Stockholm" class="destination-photo">
                 <span>Stockholm</span>
             </button>
-            
-            <button class="btn-destination" onclick="choisirDestination('Madrid')">
-                <img src="https://via.placeholder.com/100x100?text=MADRID" alt="Madrid" class="image-destination">
+            <button class="destination-button-light-green" onclick="choisirDestination('Madrid')">
+                <img src="https://via.placeholder.com/300x150?text=MADRID" alt="Madrid" class="destination-photo">
                 <span>Madrid</span>
             </button>
         </div>
@@ -159,43 +195,48 @@
 
     <!-- Page 3 -->
     <div id="page3" class="page">
-        <img src="https://via.placeholder.com/350x200?text=Une+photo+de+fin" alt="Merci !">
         <h2>Toute idée est bonne à prendre, n'hésite pas à me dire ;)</h2>
-        <textarea id="reponse3" rows="5" placeholder="Ton avis, tes envies..."></textarea>
-        <button id="btn-terminer" onclick="terminer()">Terminer</button>
+        <textarea id="reponse3" rows="4" placeholder="Ton avis, tes idées..." style="padding: 10px; width: calc(80% - 22px); margin-left: auto; margin-right: auto; border-radius: 5px; border: 1px solid #ccc; display: block;"></textarea>
+        <br><br>
+        <button id="btn-terminer" class="page-button-light-green" onclick="terminer()">Terminer</button>
     </div>
 
     <script>
-        // --- 1. Le "radar" pour le bouton Non ---
-        document.addEventListener('mousemove', function(e) {
-            const page1 = document.getElementById('page1');
-            if (!page1.classList.contains('active')) return;
+        // --- 1. Logique pour le bouton "Non" fuyant ---
+        const btnNon = document.getElementById('btn-non');
+        const page1 = document.getElementById('page1');
 
-            const btnNon = document.getElementById('btn-non');
-            const rect = btnNon.getBoundingClientRect();
-            
-            const btnCenterX = rect.left + rect.width / 2;
-            const btnCenterY = rect.top + rect.height / 2;
-            
-            const distance = Math.hypot(e.clientX - btnCenterX, e.clientY - btnCenterY);
-            
-            if (distance < 90) {
-                const xMax = window.innerWidth - btnNon.offsetWidth - 20;
-                const yMax = window.innerHeight - btnNon.offsetHeight - 20;
-                
-                const randomX = Math.floor(Math.random() * xMax);
-                const randomY = Math.floor(Math.random() * yMax);
+        // Set initial position relative to page content after page loads
+        window.addEventListener('load', () => {
+             const ouiRect = document.getElementById('btn-oui').getBoundingClientRect();
+             const pageRect = page1.getBoundingClientRect();
+             btnNon.style.left = (ouiRect.right - pageRect.left + 20) + 'px';
+             btnNon.style.top = (ouiRect.top - pageRect.top) + 'px';
+        });
 
-                btnNon.style.position = 'absolute';
-                btnNon.style.left = randomX + 'px';
-                btnNon.style.top = randomY + 'px';
-            }
+        btnNon.addEventListener('mouseover', function() {
+            // Calcule une position aléatoire *dans le cadre de la page1*
+            const pageRect = page1.getBoundingClientRect();
+            
+            // Constrain calculation to within the pale pink card
+            const xMax = pageRect.width - btnNon.offsetWidth - 20; // Padding
+            const yMax = pageRect.height - btnNon.offsetHeight - 20;
+            
+            const randomX = Math.floor(Math.random() * xMax) + 10; 
+            const randomY = Math.floor(Math.random() * yMax) + 10; 
+
+            btnNon.style.position = 'absolute'; 
+            btnNon.style.left = randomX + 'px';
+            btnNon.style.top = randomY + 'px';
         });
 
         // --- 2. Logique pour changer de page ---
         function changerPage(numeroPage) {
+            // Cache toutes les pages
             const pages = document.querySelectorAll('.page');
             pages.forEach(page => page.classList.remove('active'));
+
+            // Affiche la page demandée
             document.getElementById('page' + numeroPage).classList.add('active');
         }
 
