@@ -169,7 +169,7 @@
 
     <!-- Page 1 -->
     <div id="page1" class="page active">
-        <h2> Quand tu renteras, on part en weekend ?</h2>
+        <h2> Quand tu rentrera, on part en weekend ?</h2>
         <button id="btn-oui" class="page-button-light-green" onclick="changerPage(2)">Oui</button>
         <!-- The 'Non' button will be moved smoothly by JS on mouseover within the card -->
         <button id="btn-non">Non</button>
@@ -181,13 +181,16 @@
         
         <div style="margin-bottom: 20px;">
             <button class="destination-button-light-green" onclick="choisirDestination('Budapest')">
-                
+                <img src="https://via.placeholder.com/300x150?text=BUDAPEST" alt="Budapest" class="destination-photo">
+                <span>Budapest</span>
             </button>
             <button class="destination-button-light-green" onclick="choisirDestination('Stockholm')">
-               
+                <img src="https://via.placeholder.com/300x150?text=STOCKHOLM" alt="Stockholm" class="destination-photo">
+                <span>Stockholm</span>
             </button>
             <button class="destination-button-light-green" onclick="choisirDestination('Madrid')">
-               
+                <img src="https://via.placeholder.com/300x150?text=MADRID" alt="Madrid" class="destination-photo">
+                <span>Madrid</span>
             </button>
         </div>
     </div>
@@ -195,7 +198,7 @@
     <!-- Page 3 -->
     <div id="page3" class="page">
         <h2>Toute idée est bonne à prendre, n'hésite pas à me dire ;)</h2>
-        <textarea id="reponse3" rows="4" placeholder="Ton avis, tes idées..." style="padding: 10px; width: calc(80% - 22px); margin-left: auto; margin-right: auto; border-radius: 5px; border: 1px solid #ccc; display: block;"></textarea>
+        <textarea id="reponse3" rows="4" placeholder="Ton avis, tes idées..." style="padding: 10px; width: calc(80% - 22px); margin-left: auto; margin-right: auto; border-radius: 5px; border: 1px solid #ccc;"></textarea>
         <br><br>
         <button id="btn-terminer" class="page-button-light-green" onclick="terminer()">Terminer</button>
     </div>
