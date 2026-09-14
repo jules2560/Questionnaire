@@ -252,62 +252,103 @@
     </form>
 
     <script>
-        // --- 1. Logique pour le bouton "Non" fuyant (SUPER AGRESSIF - Option D) ---
-        const btnNon = document.getElementById('btn-non');
-        const btnOui = document.getElementById('btn-oui');
-        const page1 = document.getElementById('page1');
-        const buttonContainer = document.getElementById('button-container');
+      
+// --- 1. Bouton "Non" fuyant sur les deux axes ---
 
-        // Set initial position for Non button
-        window.addEventListener('load', () => {
-             const containerRect = buttonContainer.getBoundingClientRect();
-             const pageRect = page1.getBoundingClientRect();
-             
-             // Start Non button at the right of Oui button
-             btnNon.style.position = 'absolute';
-             btnNon.style.left = (containerRect.width / 2 + 50) + 'px';
-             btnNon.style.top = '0px';
-        });
+const btnNon = document.getElementById('btn-non');
+const btnOui = document.getElementById('btn-oui');
+const page1 = document.getElementById('page1');
+const buttonContainer = document.getElementById('button-container');
 
-        // SUPER AGGRESSIVE: Escape as soon as cursor gets close (mousemove tracking)
-        page1.addEventListener('mousemove', function(event) {
-            const pageRect = page1.getBoundingClientRect();
-            const btnRect = btnNon.getBoundingClientRect();
-            
-            // Detection radius (when cursor gets within 70px, button escapes)
-            const detectionRadius = 70;
-            
-            // Get button center position relative to page
-            const btnCenterX = btnRect.left - pageRect.left + btnRect.width / 2;
-            const btnCenterY = btnRect.top - pageRect.top + btnRect.height / 2;
-            
-            // Get cursor position relative to page
-            const cursorX = event.clientX - pageRect.left;
-            const cursorY = event.clientY - pageRect.top;
-            
-            // Calculate distance between cursor and button
-            const distance = Math.sqrt(
-                Math.pow(cursorX - btnCenterX, 2) + 
-                Math.pow(cursorY - btnCenterY, 2)
-            );
-            
-            // If cursor is close, button escapes!
-            if (distance < detectionRadius) {
-                const containerRect = buttonContainer.getBoundingClientRect();
-                const containerPageRect = page1.getBoundingClientRect();
-                
-                // Constrain to button container area
-                const xMax = containerRect.width - btnNon.offsetWidth - 20;
-                const yMax = containerRect.height - btnNon.offsetHeight - 20;
-                
-                const randomX = Math.floor(Math.random() * xMax) + 10; 
-                const randomY = Math.floor(Math.random() * yMax) + 10; 
+// Position initiale du bouton "Non"
+window.addEventListener('load', () => {
+    const ouiRect = btnOui.getBoundingClientRect();
+    const pageRect = page1.getBoundingClientRect();
 
-                btnNon.style.position = 'absolute'; 
-                btnNon.style.left = randomX + 'px';
-                btnNon.style.top = randomY + 'px';
-            }
-        });
+    btnNon.style.position = 'absolute';
+
+    // Place "Non" à droite de "Oui"
+    btnNon.style.left = (ouiRect.right - pageRect.left + 20) + 'px';
+    btnNon.style.top = (ouiRect.top - pageRect.top) + 'px';
+});
+
+// Le bouton fuit lorsque la souris s'approche
+page1.addEventListener('mousemove', function(event) {
+
+    const pageRect = page1.getBoundingClientRect();
+    const btnRect = btnNon.getBoundingClientRect();
+
+    // Distance à partir de laquelle le bouton fuit
+    const detectionRadius = 100;
+
+    // Centre du bouton
+    const btnCenterX = btnRect.left + btnRect.width / 2;
+    const btnCenterY = btnRect.top + btnRect.height / 2;
+
+    // Distance entre la souris et le bouton
+    const distance = Math.sqrt(
+        Math.pow(event.clientX - btnCenterX, 2) +
+        Math.pow(event.clientY - btnCenterY, 2)
+    );
+
+    if (distance < detectionRadius) {
+
+        // Direction opposée à la souris
+        let dx = btnCenterX - event.clientX;
+        let dy = btnCenterY - event.clientY;
+
+        // Si la souris est exactement au centre
+        if (dx === 0 && dy === 0) {
+            dx = Math.random() - 0.5;
+            dy = Math.random() - 0.5;
+        }
+
+        // Normalisation du vecteur
+        const longueur = Math.sqrt(dx * dx + dy * dy);
+
+        dx /= longueur;
+        dy /= longueur;
+
+        // Distance de fuite
+        const distanceFuite = 150;
+
+        // Nouvelle position
+        let newX =
+            btnRect.left -
+            pageRect.left +
+            dx * distanceFuite;
+
+        let newY =
+            btnRect.top -
+            pageRect.top +
+            dy * distanceFuite;
+
+        // Marge par rapport aux bords de la carte
+        const marge = 10;
+
+        // Limites horizontales
+        const maxX =
+            pageRect.width -
+            btnNon.offsetWidth -
+            marge;
+
+        // Limites verticales
+        const maxY =
+            pageRect.height -
+            btnNon.offsetHeight -
+            marge;
+
+        // Empêche le bouton de sortir de la carte
+        newX = Math.max(marge, Math.min(newX, maxX));
+        newY = Math.max(marge, Math.min(newY, maxY));
+
+        // Nouvelle position
+        btnNon.style.left = newX + 'px';
+        btnNon.style.top = newY + 'px';
+    }
+});
+
+
 
         // --- 2. Logique pour changer de page ---
         function changerPage(numeroPage) {
