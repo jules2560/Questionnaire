@@ -47,9 +47,11 @@
             padding: 40px;
             border-radius: 10px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2); /* Deeper shadow */
-            width: 350px; /* Wider for more content and movement */
+            width: 500px; /* Wider to accommodate 2 columns */
             position: relative; /* Container for absolute button */
             z-index: 1; /* On top of collage */
+            max-height: 90vh;
+            overflow-y: auto;
         }
         .page.active {
             display: block;
@@ -89,7 +91,7 @@
         /* Budapest, Stockholm, Madrid photos in answers */
         .destination-photo {
             width: 100%;
-            height: 150px;
+            height: 100px;
             object-fit: cover;
             border-radius: 5px;
             display: block;
@@ -97,15 +99,17 @@
         .destination-button-light-green {
             background-color: #bbfccb; /* Light green background */
             color: #333;
-            padding: 10px; /* Add padding for visibility */
-            display: block;
+            padding: 8px; /* Add padding for visibility */
+            display: inline-block;
             text-align: center;
             overflow: hidden;
-            width: 80%;
+            width: 45%;
             height: auto;
             border: 2px solid #a8efb7;
             font-weight: bold;
-            font-size: 14px;
+            font-size: 12px;
+            margin: 8px 2%;
+            vertical-align: top;
         }
         .destination-button-light-green:hover {
             background-color: #a8efb7; /* Darker green on hover */
@@ -114,13 +118,20 @@
             margin-bottom: 5px;
         }
 
+        /* Container for 2-column layout */
+        #destinations-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
         /* Fix button stack for specific pages */
         #page1 button {
             display: inline-block; /* Inline for 'Oui' and 'Non' */
             width: auto;
             min-width: 80px;
         }
-        #page2 .destination-button-light-green,
         #page3 .page-button-light-green {
             display: block; /* Stack on other pages */
             width: 80%;
@@ -180,7 +191,7 @@
     <div id="page2" class="page">
         <h2>Super ! Tu as cliqué sur Oui, maintenant il faut choisir la destination ;)</h2>
         
-        <div style="margin-bottom: 20px;">
+        <div id="destinations-grid">
             <button class="destination-button-light-green" onclick="choisirDestination('Paris')">
                 <img src="images/Paris.jpeg" alt="Paris" class="destination-photo">
                 Paris
