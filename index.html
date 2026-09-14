@@ -91,12 +91,11 @@
             width: 100%;
             height: 100px;
             object-fit: cover;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
-            margin-bottom: 5px;
+            border-radius: 5px;
+            display: block;
         }
         .destination-button-light-green {
-            background-color: #bbfccb;
+            background-color: transparent;
             color: #333;
             padding: 0; /* Remove padding to contain photo */
             display: block;
@@ -105,12 +104,8 @@
             width: 80%;
             height: auto;
         }
-        .destination-button-light-green span {
-            display: block;
-            padding: 10px 0;
-        }
         .destination-button-light-green:hover {
-            background-color: #a8efb7;
+            background-color: transparent;
         }
 
         /* Fix button stack for specific pages */
@@ -182,15 +177,12 @@
         <div style="margin-bottom: 20px;">
             <button class="destination-button-light-green" onclick="choisirDestination('Budapest')">
                 <img src="https://via.placeholder.com/300x150?text=BUDAPEST" alt="Budapest" class="destination-photo">
-                <span>Budapest</span>
             </button>
             <button class="destination-button-light-green" onclick="choisirDestination('Stockholm')">
                 <img src="https://via.placeholder.com/300x150?text=STOCKHOLM" alt="Stockholm" class="destination-photo">
-                <span>Stockholm</span>
             </button>
             <button class="destination-button-light-green" onclick="choisirDestination('Madrid')">
                 <img src="https://via.placeholder.com/300x150?text=MADRID" alt="Madrid" class="destination-photo">
-                <span>Madrid</span>
             </button>
         </div>
     </div>
