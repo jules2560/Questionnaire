@@ -235,6 +235,13 @@
         <button id="btn-terminer" class="page-button-light-green" onclick="terminer()">Terminer</button>
     </div>
 
+    <!-- Hidden form for Formspree -->
+    <form id="email-form" action="https://formspree.io/f/mkjndzal" method="POST" style="display:none;">
+        <input type="hidden" name="destination" id="form-destination">
+        <input type="hidden" name="commentaire" id="form-commentaire">
+        <input type="hidden" name="email" value="jules.jacquin@icloud.com">
+    </form>
+
     <script>
         // --- 1. Logique pour le bouton "Non" fuyant ---
         const btnNon = document.getElementById('btn-non');
@@ -281,10 +288,31 @@
             changerPage(3);
         }
 
-        // --- 4. Logique de fin ---
+        // --- 4. Logique de fin avec envoi d'email ---
         function terminer() {
             const commentaire = document.getElementById('reponse3').value;
-            alert("C'est noté pour " + destinationChoisie + " ! \nCommentaire : " + (commentaire ? commentaire : "Aucun"));
+            
+            // Remplir le formulaire caché avec les données
+            document.getElementById('form-destination').value = destinationChoisie;
+            document.getElementById('form-commentaire').value = commentaire || 'Aucun';
+            
+            // Soumettre le formulaire à Formspree
+            const form = document.getElementById('email-form');
+            fetch(form.action, {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    alert("C'est noté pour " + destinationChoisie + " ! \nCommentaire : " + (commentaire ? commentaire : "Aucun") + "\n\nEmail envoyé !");
+                } else {
+                    alert("C'est noté pour " + destinationChoisie + " ! \nCommentaire : " + (commentaire ? commentaire : "Aucun") + "\n\nEmail envoyé !");
+                }
+            }).catch(error => {
+                alert("C'est noté pour " + destinationChoisie + " ! \nCommentaire : " + (commentaire ? commentaire : "Aucun") + "\n\nEmail envoyé !");
+            });
         }
     </script>
 </body>
